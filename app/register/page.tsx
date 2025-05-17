@@ -1,40 +1,28 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
-import { Form, Input, Select, SelectItem, Checkbox, Button, Link } from "@heroui/react";
+import React from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { Form, Input, Checkbox, Button, Link } from "@heroui/react";
 
-
-interface FormData {
+interface FormInputs {
   name: string;
   email: string;
   password: string;
-  country: string;
-  terms?: string;
-}
-
-
-interface FormErrors {
-  [key: string]: string;
-  name: string;
-  email: string;
-  password: string;
-  country: string;
-  terms: string;
+  terms: boolean;
 }
 
 const App: React.FC = () => {
-  const [password, setPassword] = useState<string>("");
-  const [submitted, setSubmitted] = useState<FormData | null>(null);
-  const [errors, setErrors] = useState<FormErrors>({
-    name: "",
-    email: "",
-    password: "",
-    country: "",
-    terms: ""
-  });
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+    reset
+  } = useForm<FormInputs>();
 
+  const password = watch("password");
 
-  const getPasswordError = (value: string): string | null => {
+  const validatePassword = (value: string): true | string => {
     if (value.length < 4) {
       return "Password must be 4 characters or more";
     }
@@ -44,131 +32,93 @@ const App: React.FC = () => {
     if ((value.match(/[^a-z]/gi) || []).length < 1) {
       return "Password needs at least 1 symbol";
     }
-
-    return null;
+    return true;
   };
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData) as unknown as FormData;
-
-   
-    const newErrors: FormErrors = {
-      name: "",
-      email: "",
-      password: "",
-      country: "",
-      terms: ""
-    };
-
-    const passwordError = getPasswordError(data.password);
-    if (passwordError) {
-      newErrors.password = passwordError;
-    }
-
-    
-    if (data.name === "admin") {
-      newErrors.name = "Nice try! Choose a different username";
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors({ ...errors, ...newErrors });
-      return;
-    }
-
-    if (data.terms !== "true") {
-      setErrors({ ...errors, terms: "Please accept the terms" });
-      return;
-    }
-
-    
-    setErrors({
-      name: "",
-      email: "",
-      password: "",
-      country: "",
-      terms: ""
-    });
-    setSubmitted(data);
+  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    console.log('Form submitted:', data);
+    // registration logic 
   };
 
   return (
     <Form
       className="w-full justify-center items-center space-y-4"
-      validationErrors={errors}
-      onReset={() => setSubmitted(null)}
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit(onSubmit)}
+      onReset={() => reset()}
     >
       <div className="flex flex-col gap-4 max-w-md">
         <Input
-          isRequired
-          errorMessage={({ validationDetails }: { validationDetails: ValidityState }) => {
-            if (validationDetails.valueMissing) {
-              return "Please enter your name";
+          {...register("name", {
+            required: "Please enter your name",
+            validate: (value) => {
+              if (value.length < 2) {
+                return "Name must be at least 2 characters";
+              }
+              return true;
             }
-            return errors.name;
-          }}
+          })}
+          isRequired
           label="Name"
           labelPlacement="outside"
-          name="name"
           placeholder="Enter your name"
+          errorMessage={errors.name?.message}
         />
 
         <Input
+          {...register("email", {
+            required: "Please enter your email",
+            pattern: {
+              value: /\S+@\S+\.\S+/,
+              message: "Please enter a valid email address"
+            }
+          })}
           isRequired
-          errorMessage={({ validationDetails }: { validationDetails: ValidityState }) => {
-            if (validationDetails.valueMissing) {
-              return "Please enter your email";
-            }
-            if (validationDetails.typeMismatch) {
-              return "Please enter a valid email address";
-            }
-            return undefined;
-          }}
           label="Email"
           labelPlacement="outside"
-          name="email"
           placeholder="Enter your email"
           type="email"
+          errorMessage={errors.email?.message}
         />
 
         <Input
+          {...register("password", {
+            required: "Please enter your password",
+            validate: validatePassword
+          })}
           isRequired
-          errorMessage={getPasswordError(password)}
-          isInvalid={getPasswordError(password) !== null}
           label="Password"
           labelPlacement="outside"
-          name="password"
           placeholder="Enter your password"
           type="password"
-          value={password}
-          onValueChange={(value: string) => setPassword(value)}
+          errorMessage={errors.password?.message}
         />
 
         <Checkbox
+          {...register("terms", {
+            required: "Please accept the terms and conditions"
+          })}
           isRequired
           classNames={{
             label: "text-small",
           }}
           isInvalid={!!errors.terms}
-          name="terms"
-          validationBehavior="aria"
-          value="true"
-          onValueChange={() =>
-            setErrors((prev: FormErrors) => ({ ...prev, terms: "" }))
-          }
         >
           I agree to the terms and conditions
         </Checkbox>
 
         {errors.terms && (
-          <span className="text-danger text-small">{errors.terms}</span>
+          <span className="text-danger text-small">{errors.terms.message}</span>
         )}
 
         <div className="flex gap-4">
-          <Button className="w-full" color="primary" type="submit">
-            Submit
+          <Button 
+            className="w-full" 
+            color="primary" 
+            type="submit"
+            isLoading={isSubmitting}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Creating account...' : 'Create account'}
           </Button>
           <Button type="reset" variant="bordered">
             Reset
@@ -180,12 +130,6 @@ const App: React.FC = () => {
           </Link>
         </div>
       </div>
-
-      {submitted && (
-        <div className="text-small text-default-500 mt-4">
-          Submitted data: <pre>{JSON.stringify(submitted, null, 2)}</pre>
-        </div>
-      )}
     </Form>
   );
 };
