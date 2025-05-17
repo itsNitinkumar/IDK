@@ -3,7 +3,7 @@
 import React, { FormEvent, useState } from "react";
 import { Form, Input, Select, SelectItem, Checkbox, Button, Link } from "@heroui/react";
 
-// Define interfaces for form data and errors
+
 interface FormData {
   name: string;
   email: string;
@@ -12,7 +12,7 @@ interface FormData {
   terms?: string;
 }
 
-// Update FormErrors to include an index signature for compatibility with ValidationErrors
+
 interface FormErrors {
   [key: string]: string;
   name: string;
@@ -33,7 +33,7 @@ const App: React.FC = () => {
     terms: ""
   });
 
-  // Real-time password validation
+
   const getPasswordError = (value: string): string | null => {
     if (value.length < 4) {
       return "Password must be 4 characters or more";
@@ -53,7 +53,7 @@ const App: React.FC = () => {
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData) as unknown as FormData;
 
-    // Custom validation checks
+   
     const newErrors: FormErrors = {
       name: "",
       email: "",
@@ -62,13 +62,12 @@ const App: React.FC = () => {
       terms: ""
     };
 
-    // Password validation
     const passwordError = getPasswordError(data.password);
     if (passwordError) {
       newErrors.password = passwordError;
     }
 
-    // Username validation
+    
     if (data.name === "admin") {
       newErrors.name = "Nice try! Choose a different username";
     }
@@ -83,7 +82,7 @@ const App: React.FC = () => {
       return;
     }
 
-    // Clear errors and submit
+    
     setErrors({
       name: "",
       email: "",
