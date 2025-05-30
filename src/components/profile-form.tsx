@@ -57,33 +57,19 @@ export default function ProfileForm() {
             </div>
           </div>
           
-          <div className="grid grid-cols-2 gap-4">
-            <LabelInputContainer>
-              <Label htmlFor="firstName" className="text-gray-700">First Name</Label>
-              <div className="relative group">
-                <IconUser className="absolute left-3 top-2.5 h-5 w-5 text-gray-400 group-hover:text-primary transition-colors" />
-                <Input 
-                  id="firstName"
-                  className="pl-10 border-gray-200 hover:border-primary focus:border-primary transition-colors"
-                  {...register("firstName", { required: "First name is required" })}
-                />
-              </div>
-              {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName.message}</p>}
-            </LabelInputContainer>
+         <LabelInputContainer>
+  <Label htmlFor="firstName" className="text-gray-700">Name</Label>
+  <div className="relative group">
+    <IconUser className="absolute left-3 top-2.5 h-5 w-5 text-gray-400 group-hover:text-primary transition-colors" />
+    <Input 
+      id="firstName"
+      className="pl-10 border-gray-200 hover:border-primary focus:border-primary transition-colors"
+      {...register("firstName", { required: "Name is required" })}
+    />
+  </div>
+  {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName.message}</p>}
+</LabelInputContainer>
 
-            <LabelInputContainer>
-              <Label htmlFor="lastName" className="text-gray-700">Last Name</Label>
-              <div className="relative group">
-                <IconUser className="absolute left-3 top-2.5 h-5 w-5 text-gray-400 group-hover:text-primary transition-colors" />
-                <Input 
-                  id="lastName"
-                  className="pl-10 border-gray-200 hover:border-primary focus:border-primary transition-colors"
-                  {...register("lastName", { required: "Last name is required" })}
-                />
-              </div>
-              {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>}
-            </LabelInputContainer>
-          </div>
 
           <LabelInputContainer>
             <Label htmlFor="email" className="text-gray-700">Email</Label>
@@ -154,22 +140,36 @@ export default function ProfileForm() {
         </div>
       </div>
 
-      <div className="flex justify-end">
-        <button
-          type="submit"
-          disabled={!isDirty}
-          className={cn(
-            "inline-flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors",
-            "bg-primary text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
-            "disabled:opacity-50 disabled:cursor-not-allowed",
-            "group relative"
-          )}
-        >
-          Save Changes
-          <IconCheck className="ml-2 h-4 w-4" />
-          <BottomGradient />
-        </button>
-      </div>
+     <div className="flex justify-end">
+  <button
+    type="submit"
+    disabled={!isDirty}
+    className={cn(
+      "inline-flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors",
+      "bg-primary text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
+      "disabled:opacity-50 disabled:cursor-not-allowed",
+      "group relative"
+    )}
+  >
+    Save Changes
+    <IconCheck className="ml-2 h-4 w-4" />
+    <BottomGradient />
+  </button>
+
+  <button
+  type="button"
+ onClick={() => window.location.reload()}
+
+  className={cn(
+    "ml-4 inline-flex items-center px-4 py-2 rounded-md text-sm font-medium transition-colors",
+    "bg-gray-200 text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+  )}
+>
+  Cancel
+</button>
+
+</div>
+
     </form>
   );
 }

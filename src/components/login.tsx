@@ -12,7 +12,7 @@ export default function LoginPage() {
       <div className="relative flex items-center justify-center">
         <div className="relative z-10 w-[600px] h-[500px] ">
           <Image 
-            src="/welcome-back.svg" 
+            src="/login.svg" 
             alt="Welcome Back" 
             width={500} 
             height={500}
@@ -25,7 +25,7 @@ export default function LoginPage() {
 
       <div className="relative flex items-center justify-center">
         <Image 
-          src="/loginbg.svg" 
+          src="/signupbg.svg" 
           alt="" 
           width={700} 
           height={700} 

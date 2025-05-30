@@ -12,7 +12,7 @@ export default function ForgotPasswordPage() {
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-white relative">
       <div className="relative flex items-center justify-center">
-        <div className="relative z-10 w-[600px] h-[500px] ">
+        <div className="relative z-10 w-[1000px] h-[500px] ">
           <Image 
             src="/forgot-password.svg" 
             alt="Forgot Password" 
@@ -24,10 +24,11 @@ export default function ForgotPasswordPage() {
           />
         </div>
       </div>
+     
 
       <div className="relative flex items-center justify-center">
         <Image 
-          src="/resetbg.svg" 
+          src="signupbg.svg" 
           alt="" 
           width={700} 
           height={700} 
